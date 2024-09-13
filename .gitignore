@@ -1,0 +1,26 @@
+# Node modules
+node_modules/
+
+# Logs
+*.log
+logs/
+# Environment variables
+.env
+
+# VSCode settings
+.vscode/
+
+# Compiled output
+dist/
+build/
+
+# OS-specific files
+.DS_Store
+
+/coverage/
+
+*.tmp
+
+*.swp
+*.bak
+
