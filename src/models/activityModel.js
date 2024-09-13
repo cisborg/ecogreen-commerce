@@ -1,62 +1,33 @@
-// models/User.js
+const activities = {
+    renewableEnergy: { maxThreshold: 100, description: "Renewable Smart Energy Usage" },
+    entrepreneurship: { maxThreshold: 80, description: "Entrepreneurship Startups" },
+    climateActions: { maxThreshold: 90, description: "Climate Action Initiatives" },
+    treePlanting: { maxThreshold: 50, description: "Tree Planting" },
+    sustainableActivities: { maxThreshold: 70, description: "Sustainable Activities" },
+    ecoGreenMovements: { maxThreshold: 60, description: "Eco Green Movements" }
+};
 
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Adjust the path as needed
+const userActivities = {
+    renewableEnergy: 0,
+    entrepreneurship: 0,
+    climateActions: 0,
+    treePlanting: 0,
+    sustainableActivities: 0,
+    ecoGreenMovements: 0
+};
 
-class User extends Model {}
+const updateUserActivity = (activity, value) => {
+    if (activities[activity]) {
+        userActivities[activity] = Math.min(userActivities[activity] + value, activities[activity].maxThreshold);
+    }
+};
 
-User.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    email: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-            isEmail: true,
-        },
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    otp: {
-        type: DataTypes.STRING, // Store OTP temporarily
-        allowNull: true,
-    },
-    resetToken: {
-        type: DataTypes.STRING, // For password reset
-        allowNull: true,
-    },
-    resetTokenExpiry: {
-        type: DataTypes.DATE, // Expiry time for the reset token
-        allowNull: true,
-    },
-    isVerified: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false, // Email verification status
-    },
-    referralCode: {
-        type: DataTypes.STRING, // Optional referral code for users
-        allowNull: true,
-    },
-    points: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0, // Points for referral or other activities
-    },
-}, {
-    sequelize,
-    modelName: 'User',
-    tableName: 'users',
-    timestamps: true, // Automatically manage createdAt and updatedAt fields
-});
+const calculateAggregate = () => {
+    const totalMaxThreshold = Object.values(activities).reduce((acc, activity) => acc + activity.maxThreshold, 0);
+    const totalAchieved = Object.values(userActivities).reduce((acc, value) => acc + value, 0);
+    const percentage = (totalAchieved / totalMaxThreshold) * 100;
 
-// Export the User model
-module.exports = User;
+    return { totalAchieved, totalMaxThreshold, percentage };
+};
+
+module.exports = { activities, userActivities, updateUserActivity, calculateAggregate };

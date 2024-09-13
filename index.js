@@ -2,32 +2,55 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const pool = require('../config/dataBs');
-const rankingRoutes = require('./src/routes/rankingRoutes');
-const awardsRoutes = require('./src/routes/awardsRoutes');
-const activitiesRoutes = require('./src/routes/activityRoutes');
-const notificationsRoutes = require('./src/routes/notificationsRoutes');
+const pool = require('../config/database');
+
+const carbonRoutes = require('./src/routes/carbonCalculatorRoutes');
+const authRoutes = require('./src/routes/authRoutes');
+const messageRoutes = require('./src/routes/messageRoutes');
+const quickActionsRoutes = require('./src/routes/quickActionsRoutes');
+const leaderRoutes = require('./src/routes/leaderBoardRoutes');
+const squadRoutes = require('./src/routes/squadRoutes');
+const squadMembersRoutes = require('./src/routes/squadMembersRoutes');
+const transactionRoutes = require('./src/routes/transactionRoutes');
 const vendorRoutes = require('./src/routes/vendorRoutes');
-const profileRoutes = require('./src/routes/profileRoutes');
-const gcpsRoutes = require('./src/routes/gcpsActivityRoutes');
-const userRoutes = require('./src/routes/userRoutes');
-const paymentRoutes = require('./src/routes/paymentRoutes');
-const referralRoutes = require('./src/routes/referralRoutes');
+const productRoutes = require('./src/routes/productRoutes');
+const donationRoutes = require('./src/donationRoutes');
+const activityRoutes = require('./src/routes/activityRoutes');
+const focusValueRoutes = require('./src/routes/focusValueRoutes');
+const pointsRoutes = require('./src/pointsRoutes');
+
 
 
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());
-app.use('/api/rankings', rankingRoutes);
-app.use('/api/awards', awardsRoutes);
-app.use('/api/activities', activitiesRoutes);
-app.use('/api/notifications', notificationsRoutes);
+
+// Routes
+app.use('/api/', carbonRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', activityRoutes);
+app.use('/api/', notificationsRoutes);
 app.use('/api/vendors', vendorRoutes);
-app.use('/api/profiles', profileRoutes);
-app.use('/api/gcpActivities', gcpsRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/referrals', referralRoutes);
+app.use('/api/donations', donationRoutes);
+app.use('/api/', focusValueRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/', quickActionsRoutes);
+app.use('/api/', leaderRoutes);
+app.use('/api/squads', squadRoutes);
+app.use('/api/squad_members', squadMembersRoutes);
+app.use('/api/', pointsRoutes);
+
+// Connect to PostgreSQL database
+
+pool.connect((err, client) => {
+    if (err) {
+        console.error('Connection to PostgreSQL failed', err.stack);
+    } else {
+        console.log('Connected to PostgreSQL');
+    }
+});
 
 const PORT = process.env.PORT || 5000;
 

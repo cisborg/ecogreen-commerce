@@ -1,6 +1,6 @@
 // controllers/authController.js
 
-const User = require('../models/User');
+const User = require('../models/userModel');
 const { hashPassword, generateToken } = require('../helpers/authHelpers');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
